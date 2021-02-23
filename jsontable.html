@@ -1,0 +1,117 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+</script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha385-ggOyR0iXCbMQv3Xipma34MD+dh/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+    th{color: #fff;}
+    h1{ 
+        padding: 1rem;
+        background:#17a2b8;
+        color: #fff;
+    }
+    h3{ 
+        margin-left: 1rem;
+    }
+</style>
+<header>
+    <h1>Projektportfölj - Stockholm Vatten och Avfall</h1>
+</header>
+
+<div class="row">
+    <div class="col">
+        <h3>Sök</h3>
+        <div class="card card-body">
+            <input id="search-input" class="form-control" type="text">
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <tr class="bg-info">
+            <th data-column="Projekt" data-order="minskande">Projekt &#9650</th>
+            <th data-column="Budget" data-order="minskande">Budget &#9650</th>
+            <th data-column="Startdatum" data-order="minskande">Startdatum &#9650</th>
+            <th data-column="Slutdatum" data-order="minskande">Slutdatum &#9650</th>
+            <th data-column="Prioritet" data-order="minskande">Prioritet &#9650</th>
+            <th data-column="Risk" data-order="minskande">Risk &#9650</th>
+            <th data-column="Status" data-order="minskande">Status &#9650</th>
+
+    </tr>
+
+    <tbody id="myTable">
+
+
+    </tbody>
+</table>
+
+<script>
+    var myArray = [
+        {'Projekt':'Avfall 1', 'Budget':'31 000 000', 'Startdatum':'11/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'2', 'Risk':'Liten','Status':'3/5'},
+        {'Projekt':'Avfallshantering 2', 'Budget':'32 000 000', 'Startdatum':'12/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'2', 'Risk':'Liten','Status':'2/5'},
+        {'Projekt':'Implementering M365', 'Budget':'2 000 000', 'Startdatum':'13/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'2', 'Risk':'Stor','Status':'1/5'},
+        {'Projekt':'GSIT 3', 'Budget':'34 000 000', 'Startdatum':'14/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'2', 'Risk':'Liten','Status':'4/5'},
+        {'Projekt':'Ledningsnät', 'Budget':'25 000 000', 'Startdatum':'15/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'2', 'Risk':'Medel','Status':'1/5'},
+        {'Projekt':'Projektering Årsta', 'Budget':'6 000 000', 'Startdatum':'16/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'2', 'Risk':'Liten','Status':'1/5'},
+        {'Projekt':'Nytt Intranät', 'Budget':'2 000 000', 'Startdatum':'17/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'2', 'Risk':'Liten','Status':'4/5'},
+        {'Projekt':'Returfynd', 'Budget':'1 000 000', 'Startdatum':'18/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'3', 'Risk':'Stor','Status':'1/5'},
+        {'Projekt':'Vattenproduktion 1', 'Budget':'42 000 000', 'Startdatum':'18/10/2021', 'Slutdatum' : '31/12/2021', 'Prioritet':'3', 'Risk':'Stor','Status':'1/5'}
+    ]
+$('#search-input').on('keyup', function(){
+    var value = $(this).val()
+    console.log('Value', value)
+    var data = searchTable(value, myArray)
+    buildTable(data)
+})
+
+$('th').on('click', function(){
+    var column = $(this).data('column')
+    var order = $(this).data('order')
+    var text = $(this).html()
+    text = text.substring(0, text.length - 1)
+
+    if(order == 'minskande'){
+        $(this).data('order',"okande")
+        myArray = myArray.sort((a,b) => a[column] > b[column] ? 1 : -1)
+        text += '&#9660'
+    }else{
+        $(this).data('order',"minskande")
+        myArray = myArray.sort((a,b) => a[column] < b[column] ? 1 : -1)
+        text += '&#9650'
+    }
+    $(this).html(text) 
+
+    buildTable(myArray)
+})
+
+buildTable(myArray)
+
+function searchTable(value, data){
+    var filteredData = []
+    for(var i = 0; i < data.length; i++){
+        value = value.toLowerCase()
+        var projekt = data[i].Projekt.toLowerCase()
+
+        if(projekt.includes(value)){
+            filteredData.push(data[i])
+        }
+    }
+    return filteredData
+}
+
+function buildTable(data){
+    var table = document.getElementById('myTable')
+    table.innerHTML = ''
+    for(var i = 0; i < data.length; i++){
+            	var row = `<tr>
+                        <td>${data[i].Projekt}</td>
+                        <td>${data[i].Budget}</td>
+                        <td>${data[i].Startdatum}</td>
+                        <td>${data[i].Slutdatum}</td>
+                        <td>${data[i].Prioritet}</td>
+                        <td>${data[i].Risk}</td>
+                        <td>${data[i].Status}</td>
+                        
+                </tr>`
+                table.innerHTML += row
+    }
+}
+</script>
